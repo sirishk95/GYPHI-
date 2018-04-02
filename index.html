@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+
+    <title>JavaScript Object Review</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  </head>
+  <body>
+
+      <div id = "animal-buttons"></div>
+
+      <form id = "search-form">
+            <input type="text" name="search">
+
+            <input type="submit" value="Submit">
+      </form>
+
+      <div id = "gif-display"></div>
+
+    <script type="text/javascript">
+
+
+
+    $(document).ready(function() {
+
+        var gifButtonArray = ["tiger", "bear", "lion", "fish", "octopus", "turtle", "gorilla"];
+
+        function populateButtons(myArray) {
+
+            for (var i = 0; i < myArray.length; i++) {
+                var button = $("<button>");
+                    
+                button.addClass("animal-button");
+                button.attr("data-type", myArray[i]);
+                button.text(myArray[i]);
+                
+                $("#animal-buttons").append(button);
+
+            }
+
+        }
+
+        $(document).on("click", ".animal-button", function() {
+
+            var userSelect = $(this).attr("data-type");
+            console.log(userSelect);
+
+            var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + userSelect + "&api_key=dc6zaTOxFJmzC&limit=10";
+            
+            $.ajax({
+                url: queryURL, 
+                method: "Get" 
+            }).then(function(response) {
+                var results = response.data;
+                for (var i = 0; i < results.length; i++) {
+                    var animalIMG = $("<img>");
+
+                    animalIMG.addClass("animal-gif");
+
+                    animalIMG.attr("src", results[i].images.fixed_height.url)
+
+                    $("#gif-display").append(animalIMG);
+
+                }
+            });
+            
+        });
+
+    
+
+        populateButtons(gifButtonArray);
+
+    });
+
+
+      
+    </script>
+
+  </body>
+</html>
